@@ -686,24 +686,66 @@ def run_analisis(data):
     
     return r, analizador_obj
 
+# -----------------------------
+# Valores por defecto en los Entry (usar el diccionario 'form')
+# -----------------------------
 def cargar_valores_por_defecto():
-    ingresos_2023_entry.insert(0, "8500")
-    ingresos_2024_entry.insert(0, "11200")
-    costo_2023_entry.insert(0, "3200")
-    costo_2024_entry.insert(0, "4100")
-    gadm_2023_entry.insert(0, "2100")
-    gadm_2024_entry.insert(0, "2600")
-    gventas_2023_entry.insert(0, "1200")
-    gventas_2024_entry.insert(0, "1400")
-    depre_2023_entry.insert(0, "400")
-    depre_2024_entry.insert(0, "500")
-    gfin_2023_entry.insert(0, "100")
-    gfin_2024_entry.insert(0, "150")
-    otros_2023_entry.insert(0, "50")
-    otros_2024_entry.insert(0, "100")
-    impuesto_2023_entry.insert(0, "388")
-    impuesto_2024_entry.insert(0, "638")
+    defaults = {
+        # Estado de resultados (miles de Bs.)
+        "Ingresos_2023": "8500",
+        "Ingresos_2024": "11200",
+        "Costo_2023": "3200",
+        "Costo_2024": "4100",
+        "GB_2023": "5300",     # Ganancia Bruta 2023 si la tienes
+        "GB_2024": "7100",
+        "GA_2023": "2100",
+        "GA_2024": "2600",
+        "GV_2023": "1200",
+        "GV_2024": "1400",
+        "DEP_2023": "400",
+        "DEP_2024": "500",
+        "BAII_2023": "1600",
+        "BAII_2024": "2600",
+        "GastosFin_2023": "100",
+        "GastosFin_2024": "150",
+        "UN_2023": "1162",
+        "UN_2024": "1912",
+        # Balance / otros
+        "AC_2023": "2800",
+        "AC_2024": "3800",
+        "ANC_2023": "1450",
+        "ANC_2024": "1850",
+        "PC_2023": "550",
+        "PC_2024": "1000",
+        "PNC_2023": "700",
+        "PNC_2024": "1000",
+        "PN_2023": "3000",
+        "PN_2024": "3650",
+        "Caja_2023": "850",
+        "Caja_2024": "1100",
+        "Clientes_2023": "1200",
+        "Clientes_2024": "1600",
+        "InvCP_2023": "300",
+        "InvCP_2024": "500",
+        # Ciclo de efectivo
+        "DI": "60",
+        "DC": "45",
+        "DP": "30",
+    }
 
+    for key, val in defaults.items():
+        widget = form.get(key)
+        if widget is None:
+            # Si no existe ese campo en el formulario, lo ignoramos
+            continue
+        try:
+            # Limpiar y setear el valor por defecto
+            widget.delete(0, tk.END)
+            widget.insert(0, str(val))
+        except Exception as e:
+            # En caso de que el widget no acepte .delete/.insert (por ejemplo un Text),
+            # se puede adaptar según sea necesario. Por ahora lo registramos.
+            print(f"No se pudo setear default para {key}: {e}")
 
 
 # ======================================================
@@ -876,16 +918,12 @@ def run_all():
     """Ejecuta el análisis, actualiza la GUI y genera el PDF."""
     try:
         data = read_all_inputs(form)
-        # 1. Ejecutar análisis, generar texto de la GUI y el gráfico temporal
-        r, analizador_obj = run_analisis(data) 
-        
-        # 2. Generar PDF (usa 'r' y los globales de texto que se llenaron en run_analisis)
+        r, analizador_obj = run_analisis(data)
         generar_pdf(r, data)
-        
     except Exception as e:
         messagebox.showerror("Error de Ejecución", f"Ocurrió un error en la ejecución: {e}")
-        
-# Llamar al iniciar la app
+
+# ⬇️ Llamar después de crear todos los inputs
 cargar_valores_por_defecto()
-# La función mainloop para mantener la ventana de Tkinter activa
+
 root.mainloop()
