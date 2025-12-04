@@ -686,6 +686,26 @@ def run_analisis(data):
     
     return r, analizador_obj
 
+def cargar_valores_por_defecto():
+    ingresos_2023_entry.insert(0, "8500")
+    ingresos_2024_entry.insert(0, "11200")
+    costo_2023_entry.insert(0, "3200")
+    costo_2024_entry.insert(0, "4100")
+    gadm_2023_entry.insert(0, "2100")
+    gadm_2024_entry.insert(0, "2600")
+    gventas_2023_entry.insert(0, "1200")
+    gventas_2024_entry.insert(0, "1400")
+    depre_2023_entry.insert(0, "400")
+    depre_2024_entry.insert(0, "500")
+    gfin_2023_entry.insert(0, "100")
+    gfin_2024_entry.insert(0, "150")
+    otros_2023_entry.insert(0, "50")
+    otros_2024_entry.insert(0, "100")
+    impuesto_2023_entry.insert(0, "388")
+    impuesto_2024_entry.insert(0, "638")
+
+
+
 # ======================================================
 # FUNCIÓN DE GENERACIÓN DE PDF CORREGIDA
 # ======================================================
@@ -864,6 +884,8 @@ def run_all():
         
     except Exception as e:
         messagebox.showerror("Error de Ejecución", f"Ocurrió un error en la ejecución: {e}")
-
+        
+# Llamar al iniciar la app
+cargar_valores_por_defecto()
 # La función mainloop para mantener la ventana de Tkinter activa
 root.mainloop()
